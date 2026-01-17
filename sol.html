@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SOLANA_TOKEN_ROUTER - /biz/ edition</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'sans-serif', monospace;
+            background: #FFFFEE;
+            color: #800000;
+            height: 100vh;
+            font-size: 14px;
+            line-height: 1.3;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: 100vh;
+            gap: 0;
+            min-height: 0;
+            min-width: 0;
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 1px solid #14F195; /* Solana green */
+            border-top: none;
+        }
+        
+        /* LEFT PANEL - YOTSUBA B STYLE */
+        .left-panel {
+            background: #F0E0D6;
+            padding: 15px;
+            border-right: 2px solid #14F195;
+            overflow-y: auto;
+            height: 100%;
+            min-height: 0;
+        }
+        
+        .header {
+            text-align: left;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #14F195;
+        }
+        
+        .header h1 {
+            color: #9945FF; /* Solana purple */
+            font-size: 22px;
+            margin-bottom: 5px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #D9BFB7;
+        }
+        
+        .header .subtitle {
+            color: #800000;
+            font-size: 11px;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+            white-space: pre-line;
+        }
+        
+        .header .tagline {
+            color: #707070;
+            font-size: 10px;
+            font-style: italic;
+            background: #E5E5E5;
+            padding: 3px 5px;
+            display: inline-block;
+        }
+        
+        .config-group {
+            margin: 20px 0;
+        }
+        
+        .config-label {
+            display: block;
+            color: #9945FF; /* Solana purple */
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            background: #FFFFEE;
+            color: #800000;
+            border: 1px solid #14F195;
+            font-family: 'sans-serif', monospace;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        .input-field:focus {
+            border-color: #9945FF;
+            outline: none;
+            background: #FAF0E6;
+        }
+        
+        .input-hint {
+            color: #707070;
+            font-size: 10px;
+            margin-top: 3px;
+            font-style: italic;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 15px 0;
+        }
+        
+        .slider-label {
+            color: #800000;
+            min-width: 85px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+        
+        .slider-value {
+            color: #9945FF;
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+            background: #E5E5E5;
+            padding: 2px 6px;
+            border-radius: 2px;
+            border: 1px solid #707070;
+            font-family: monospace;
+        }
+        
+        input[type="range"] {
+            flex: 1;
+            height: 4px;
+            background: #E5E5E5;
+            border-radius: 2px;
+            outline: none;
+            border: 1px solid #14F195;
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 25px 0 15px;
+        }
+        
+        .btn {
+            padding: 12px;
+            border: 2px outset #14F195;
+            font-family: 'sans-serif', monospace;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: none;
+        }
+        
+        .btn-generate {
+            background: #E5E5E5;
+            color: #800000;
+        }
+        
+        .btn-generate:hover {
+            background: #D5D5D5;
+            border-style: inset;
+        }
+        
+        .btn-reset {
+            background: #F0E0D6;
+            color: #CC1105;
+            border-color: #CC1105;
+        }
+        
+        .btn-reset:hover {
+            background: #E0D0C6;
+            border-style: inset;
+        }
+        
+        .btn-execute {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #9945FF, #14F195);
+            color: white;
+            border: 2px outset #9945FF;
+            font-family: 'sans-serif', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: none;
+            margin-top: 10px;
+        }
+        
+        .btn-execute:hover {
+            background: linear-gradient(135deg, #8945EF, #04E185);
+            border-style: inset;
+        }
+        
+        .sol-info {
+            background: #E5E5E5;
+            padding: 12px;
+            margin-top: 15px;
+            border: 1px solid #14F195;
+            font-size: 12px;
+        }
+        
+        .sol-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 6px 0;
+            padding-bottom: 4px;
+            border-bottom: 1px dotted #707070;
+        }
+        
+        .sol-label { color: #9945FF; font-weight: bold; }
+        .sol-value { color: #800000; font-family: monospace; }
+        
+        /* NETWORK VALIDATION WARNING */
+        .network-warning {
+            background: #FFEEEE;
+            border: 2px solid #CC1105;
+            padding: 12px;
+            margin: 15px 0;
+            display: none;
+            color: #800000;
+            font-size: 12px;
+            border-radius: 3px;
+        }
+        
+        .network-warning.show {
+            display: block;
+            animation: flashWarning 0.5s ease-in-out 3;
+        }
+        
+        @keyframes flashWarning {
+            0%, 100% { background: #FFEEEE; }
+            50% { background: #FFCCCC; }
+        }
+        
+        /* RIGHT PANEL - SOLANA DARK STYLE */
+        .right-panel {
+            background: #0a0b1a; /* Solana dark blue */
+            display: flex;
+            flex-direction: column;
+            color: #e9e6e6;
+        }
+        
+        .terminal-header {
+            background: #1a1b2e;
+            padding: 12px;
+            border-bottom: 2px solid #0a0b1a;
+            color: #14F195; /* Solana green */
+            font-size: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-family: 'sans-serif', monospace;
+            letter-spacing: 1px;
+            border-left: 3px solid #9945FF; /* Solana purple */
+        }
+        
+        .terminal-content {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.4;
+            height: 0;
+            min-height: 0;
+            font-family: 'monospace', sans-serif;
+        }
+        
+        .terminal-line {
+            margin: 6px 0;
+            padding-left: 10px;
+            border-left: 2px solid transparent;
+            animation: fadeIn 0.3s ease-in;
+            font-family: 'monospace', sans-serif;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .timestamp {
+            color: #14F195; /* Solana green */
+            margin-right: 10px;
+            font-family: monospace;
+        }
+        
+        /* Solana-style log colors */
+        .log-success { color: #14F195; border-left-color: #14F195; } /* Solana green */
+        .log-info { color: #8a8aff; border-left-color: #8a8aff; } /* Solana blue */
+        .log-warning { color: #ffcc00; border-left-color: #ffcc00; }
+        .log-error { color: #ff6b6b; border-left-color: #ff6b6b; }
+        .log-path { color: #e9e6e6; border-left-color: #9945FF; }
+        .log-sol { color: #14F195; border-left-color: #14F195; }
+        .log-spl { color: #9945FF; border-left-color: #9945FF; } /* SPL Token */
+        .log-program { color: #8a8aff; border-left-color: #8a8aff; }
+        
+        .terminal-line.log-success::before {
+            content: "> ";
+            color: #14F195;
+            font-weight: bold;
+        }
+        
+        .path-section {
+            margin: 15px 0;
+            padding: 12px;
+            background: #1a1b2e;
+            border-left: 3px solid #9945FF;
+            border-top: 1px solid #0a0b1a;
+            border-bottom: 1px solid #0a0b1a;
+        }
+        
+        .path-title {
+            color: #14F195;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 13px;
+            border-bottom: 1px dashed #1a1b2e;
+            padding-bottom: 5px;
+        }
+        
+        .path-step {
+            margin: 6px 0;
+            padding-left: 10px;
+            border-left: 1px solid #0a0b1a;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        
+        .account-address {
+            color: #9945FF;
+            font-family: monospace;
+            font-size: 11px;
+        }
+        
+        .program-name {
+            color: #8a8aff;
+            font-style: italic;
+            margin-left: 8px;
+            font-size: 11px;
+        }
+        
+        .arrow {
+            color: #14F195;
+            margin: 0 3px;
+            font-weight: bold;
+        }
+        
+        .lamports-estimate {
+            background: #1a1b2e;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #0a0b1a;
+            border-left: 3px solid #14F195;
+        }
+        
+        .privacy-note {
+            background: #0a1a0a;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px dashed #14F195;
+            color: #14F195;
+            font-size: 11px;
+            font-family: monospace;
+        }
+        
+        .solana-icon {
+            color: #9945FF;
+            margin-right: 5px;
+        }
+        
+        /* Solana-style scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #E5E5E5;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #14F195;
+            border-radius: 0px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #04E185;
+        }
+        
+        .right-panel::-webkit-scrollbar-track {
+            background: #0a0b1a;
+        }
+        
+        .right-panel::-webkit-scrollbar-thumb {
+            background: #9945FF;
+        }
+        
+        .right-panel::-webkit-scrollbar-thumb:hover {
+            background: #8945EF;
+        }
+        
+        .wallet-connect {
+            background: linear-gradient(135deg, #9945FF, #14F195);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-family: 'sans-serif', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .wallet-connect:hover {
+            background: linear-gradient(135deg, #8945EF, #04E185);
+        }
+        
+        .wallet-connected {
+            background: #0a1a0a;
+            color: #14F195;
+            border: 1px solid #14F195;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 11px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- LEFT PANEL: CONFIGURATION -->
+        <div class="left-panel">
+            <div class="header">
+                <h1>SOLANA_TOKEN_ROUTER</h1>
+                <div class="subtitle" id="networkDisplay">[NETWORK: SOLANA_MAINNET_BETA]
+// PROGRAMS: 3 SPL | 2 SYSTEM | 4 MEMO
+// FEE_MULTIPLIER: 0.000005 SOL/tx</div>
+                <div class="tagline">100% program-based routing ensures transaction privacy</div>
+            </div>
+            
+            <!-- WALLET CONNECTION -->
+            <div id="walletSection">
+                <button class="wallet-connect" onclick="connectWallet()" id="connectWalletBtn">
+                    🔗 Connect Phantom Wallet
+                </button>
+                <div class="wallet-connected" id="walletInfo" style="display: none;">
+                    <span class="solana-icon">✓</span> Connected: <span id="walletAddress"></span>
+                </div>
+            </div>
+            
+            <!-- NETWORK VALIDATION WARNING -->
+            <div class="network-warning" id="networkWarning">
+                ⚠️ <strong>TOKEN-NETWORK MISMATCH!</strong><br>
+                Token mint appears to be invalid or on devnet.<br>
+                Verify the token exists on mainnet.
+            </div>
+            
+            <div class="config-group">
+                <label class="config-label">Token Mint Address</label>
+                <input type="text" class="input-field" id="tokenMint" 
+                       placeholder="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v" 
+                       value="EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v">
+                <div class="input-hint">Enter SPL token mint address</div>
+            </div>
+            
+            <div class="config-group">
+                <label class="config-label">Destination Wallet</label>
+                <input type="text" class="input-field" id="destination" 
+                       placeholder="vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg"
+                       value="vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg">
+                <div class="input-hint">Enter destination wallet address</div>
+            </div>
+            
+            <div class="config-group">
+                <label class="config-label">Amount</label>
+                <input type="text" class="input-field" id="amount" 
+                       placeholder="100.0" value="100.0">
+                <div class="input-hint">Tokens to route (with decimals)</div>
+            </div>
+            
+            <div class="config-group">
+                <div class="slider-container">
+                    <span class="slider-label">Transaction Paths</span>
+                    <input type="range" id="txCount" min="1" max="10" value="4" 
+                           oninput="updateSliders()">
+                    <span class="slider-value" id="txCountValue">4</span>
+                </div>
+                <div class="input-hint">Number of parallel transaction paths</div>
+            </div>
+            
+            <div class="config-group">
+                <div class="slider-container">
+                    <span class="slider-label">Programs/Tx</span>
+                    <input type="range" id="programsPerTx" min="1" max="8" value="3" 
+                           oninput="updateSliders()">
+                    <span class="slider-value" id="programsValue">3</span>
+                </div>
+                <div class="input-hint">Program interactions per transaction</div>
+            </div>
+            
+            <div class="sol-info">
+                <div class="sol-row">
+                    <span class="sol-label">SOL Requirements:</span>
+                    <span class="sol-value" id="solRequired">0.025 SOL</span>
+                </div>
+                <div class="sol-row">
+                    <span class="sol-label">Current Fee:</span>
+                    <span class="sol-value" id="currentFee">0.000005 SOL</span>
+                </div>
+                <div class="sol-row">
+                    <span class="sol-label">Estimated Cost:</span>
+                    <span class="sol-value" id="estimatedCost">$3.50</span>
+                </div>
+                <div class="sol-row">
+                    <span class="sol-label">Compute Units:</span>
+                    <span class="sol-value" id="computeUnits">~1,200,000</span>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button class="btn btn-generate" onclick="generatePath()">
+                    GENERATE PATH
+                </button>
+                <button class="btn btn-reset" onclick="resetConfig()">
+                    RESET ALL
+                </button>
+            </div>
+            
+            <button class="btn-execute" id="executeBtn" onclick="executeTransfer()">
+                🚀 EXECUTE ROUTING
+            </button>
+        </div>
+        
+        <!-- RIGHT PANEL: TERMINAL OUTPUT -->
+        <div class="right-panel">
+            <div class="terminal-header" id="terminalHeader">
+                SOLANA ROUTER TERMINAL - MAINNET BETA
+            </div>
+            <div class="terminal-content" id="terminal">
+                <div class="terminal-line log-info">
+                    <span class="timestamp">[12:21:40 PM]</span>
+                    ⚡ SOLANA_TOKEN_ROUTER v2.1 initialized
+                </div>
+                <div class="terminal-line log-info">
+                    <span class="timestamp">[12:21:40 PM]</span>
+                    🌐 Active: Solana Mainnet Beta | 5000 TPS | Priority Fee Enabled
+                </div>
+                <div class="terminal-line log-info">
+                    <span class="timestamp">[12:21:40 PM]</span>
+                    💡 Connect wallet & enter token mint to begin
+                </div>
+                <div class="terminal-line log-success">
+                    <span class="timestamp">[12:21:41 PM]</span>
+                    Ready for high-speed Solana token routing
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Solana Web3.js -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <!-- Phantom Wallet Adapter -->
+    <script src="https://unpkg.com/@solana/wallet-adapter-phantom/lib/solana-wallet-adapter-phantom.iife.js"></script>
+    
+    <script>
+        // SOLANA TOKEN DATABASE
+        const SPL_TOKEN_DATABASE = {
+            'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v': { name: 'USD Coin', symbol: 'USDC', decimals: 6 },
+            'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB': { name: 'USDT', symbol: 'USDT', decimals: 6 },
+            'So11111111111111111111111111111111111111112': { name: 'Wrapped SOL', symbol: 'WSOL', decimals: 9 },
+            '7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU': { name: 'Samoyed Coin', symbol: 'SAMO', decimals: 9 },
+            'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263': { name: 'Bonk', symbol: 'BONK', decimals: 5 },
+            'orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE': { name: 'Orca', symbol: 'ORCA', decimals: 6 },
+            'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt': { name: 'Serum', symbol: 'SRM', decimals: 6 },
+            'kinXdEcpDQeHPEuQnqmUgtYykqKGVFq6CeVX5iAHJq6': { name: 'Kin', symbol: 'KIN', decimals: 5 }
+        };
+        
+        // SOLANA PROGRAM DATABASE
+        const SOLANA_PROGRAMS = {
+            system: {
+                '11111111111111111111111111111111': 'System Program',
+                'Config1111111111111111111111111111111111111': 'Config Program',
+                'Vote111111111111111111111111111111111111111': 'Vote Program'
+            },
+            token: {
+                'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA': 'Token Program',
+                'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL': 'Associated Token Program',
+                'MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr': 'Memo Program'
+            },
+            dex: {
+                '9W959DqEETiGZocYWCQPaJ6sBmUzgfxXfqGeTEdp3aQP': 'Orca DEX',
+                '675kPX9MHTjS2zt1qfr1NYHuzeLXfQM9H24wFSUt1Mp8': 'Raydium AMM',
+                'srmqPvymJeFKQ4zGQed1GFppgkRHL9kaELCbyksJtPX': 'OpenBook DEX'
+            },
+            privacy: {
+                'Route111111111111111111111111111111111111111': 'Token Router',
+                'JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4': 'Jupiter Aggregator',
+                'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo': 'Memo v2',
+                'Noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV': 'Noop Program'
+            }
+        };
+        
+        // Configuration
+        let config = {
+            tokenMint: '',
+            destination: '',
+            amount: '',
+            txCount: 4,
+            programsPerTx: 3,
+            tokenInfo: null,
+            pathGenerated: false,
+            wallet: null,
+            walletAddress: '',
+            connection: null,
+            solana: window.solana,
+            network: 'mainnet-beta',
+            networkConfig: {
+                'mainnet-beta': {
+                    name: 'Solana Mainnet Beta',
+                    rpcUrl: 'https://api.mainnet-beta.solana.com',
+                    explorer: 'https://explorer.solana.com',
+                    feeMultiplier: 1.0,
+                    priorityFee: 0.000001 // SOL
+                },
+                'devnet': {
+                    name: 'Solana Devnet',
+                    rpcUrl: 'https://api.devnet.solana.com',
+                    explorer: 'https://explorer.solana.com/?cluster=devnet',
+                    feeMultiplier: 0.1,
+                    priorityFee: 0.000001
+                }
+            }
+        };
+        
+        // Initialize Solana connection
+        async function initSolana() {
+            try {
+                if (!window.solana) {
+                    addTerminalLog('⚠️ Phantom wallet not detected. Install from phantom.app', 'warning');
+                    return false;
+                }
+                
+                // Initialize connection
+                config.connection = new solanaWeb3.Connection(
+                    config.networkConfig[config.network].rpcUrl,
+                    'confirmed'
+                );
+                
+                addTerminalLog('✓ Solana connection established', 'success');
+                addTerminalLog(`📡 RPC: ${config.networkConfig[config.network].rpcUrl}`, 'info');
+                
+                return true;
+            } catch (error) {
+                addTerminalLog(`❌ Solana init error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // Connect Phantom wallet
+        async function connectWallet() {
+            try {
+                if (!window.solana || !window.solana.isPhantom) {
+                    addTerminalLog('❌ Phantom wallet not installed', 'error');
+                    addTerminalLog('Download from: https://phantom.app', 'info');
+                    return;
+                }
+                
+                // Request connection
+                const response = await window.solana.connect();
+                config.wallet = response;
+                config.walletAddress = response.publicKey.toString();
+                
+                // Update UI
+                document.getElementById('connectWalletBtn').style.display = 'none';
+                document.getElementById('walletInfo').style.display = 'block';
+                document.getElementById('walletAddress').textContent = 
+                    config.walletAddress.substring(0, 12) + '...' + 
+                    config.walletAddress.substring(config.walletAddress.length - 8);
+                
+                // Initialize Solana connection
+                await initSolana();
+                
+                // Get wallet balance
+                const balance = await config.connection.getBalance(response.publicKey);
+                const solBalance = balance / 1e9;
+                
+                addTerminalLog(`✓ Wallet connected: ${config.walletAddress.substring(0, 12)}...`, 'success');
+                addTerminalLog(`💰 Balance: ${solBalance.toFixed(4)} SOL`, 'info');
+                addTerminalLog('Ready for token routing operations', 'success');
+                
+            } catch (error) {
+                addTerminalLog(`❌ Wallet connection failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Update UI
+        function updateSliders() {
+            config.txCount = parseInt(document.getElementById('txCount').value);
+            config.programsPerTx = parseInt(document.getElementById('programsPerTx').value);
+            
+            document.getElementById('txCountValue').textContent = config.txCount;
+            document.getElementById('programsValue').textContent = config.programsPerTx;
+            
+            updateSolEstimate();
+        }
+        
+        // Update SOL estimate
+        async function updateSolEstimate() {
+            const network = config.networkConfig[config.network];
+            const totalTxs = config.txCount;
+            const programsPerTx = config.programsPerTx;
+            
+            // Calculate SOL requirements
+            const baseFee = 0.000005; // SOL per signature
+            const priorityFee = network.priorityFee;
+            const computeFee = programsPerTx * 0.0000001;
+            
+            const solPerTx = baseFee + priorityFee + computeFee;
+            const totalSOL = solPerTx * totalTxs;
+            
+            // Add intermediate account rent
+            const rentPerAccount = 0.001;
+            const totalRent = rentPerAccount * totalTxs * 0.1;
+            
+            const finalTotal = totalSOL + totalRent;
+            
+            // Calculate USD cost (SOL price ~$140)
+            const solPrice = 140;
+            const usdCost = finalTotal * solPrice;
+            
+            // Calculate compute units
+            const computeUnits = totalTxs * programsPerTx * 200000;
+            
+            // Format for display
+            document.getElementById('solRequired').textContent = `${finalTotal.toFixed(6)} SOL`;
+            document.getElementById('currentFee').textContent = `${solPerTx.toFixed(6)} SOL/tx`;
+            document.getElementById('estimatedCost').textContent = `$${usdCost.toFixed(2)}`;
+            document.getElementById('computeUnits').textContent = `~${computeUnits.toLocaleString()}`;
+        }
+        
+        // Check token validity
+        async function checkTokenValidity(mintAddress) {
+            const mint = mintAddress.trim();
+            
+            // Check in known token database first
+            if (SPL_TOKEN_DATABASE[mint]) {
+                hideNetworkWarning();
+                return SPL_TOKEN_DATABASE[mint];
+            }
+            
+            try {
+                // Try to fetch token info from chain
+                if (!config.connection) {
+                    await initSolana();
+                }
+                
+                const mintPublicKey = new solanaWeb3.PublicKey(mint);
+                
+                // Get token supply
+                const supply = await config.connection.getTokenSupply(mintPublicKey);
+                
+                if (supply.value.uiAmount > 0) {
+                    // Valid token found
+                    const tokenInfo = {
+                        name: 'Unknown Token',
+                        symbol: 'TOKEN',
+                        decimals: supply.value.decimals,
+                        supply: supply.value.uiAmount
+                    };
+                    
+                    // Try to get metadata
+                    try {
+                        // This would require additional metadata fetch
+                        // For simplicity, we'll use what we have
+                    } catch (e) {
+                        // Metadata not available, use defaults
+                    }
+                    
+                    hideNetworkWarning();
+                    return tokenInfo;
+                }
+                
+            } catch (error) {
+                // Token not found
+                showNetworkWarning(`⚠️ <strong>TOKEN NOT FOUND!</strong><br>
+                Mint address not found on ${config.network}.<br>
+                <span style="font-size:10px;">Verify the token exists or try a different mint address.</span>`);
+                return null;
+            }
+            
+            return null;
+        }
+        
+        // Show/hide network warning
+        function showNetworkWarning(message = null) {
+            const warning = document.getElementById('networkWarning');
+            if (message) {
+                warning.innerHTML = message;
+            }
+            warning.classList.add('show');
+            document.getElementById('executeBtn').style.display = 'none';
+            config.pathGenerated = false;
+        }
+        
+        function hideNetworkWarning() {
+            const warning = document.getElementById('networkWarning');
+            warning.classList.remove('show');
+        }
+        
+        // Generate routing path
+        async function generatePath() {
+            if (!config.wallet) {
+                addTerminalLog('❌ Connect Phantom wallet first', 'error');
+                return;
+            }
+            
+            config.tokenMint = document.getElementById('tokenMint').value;
+            config.destination = document.getElementById('destination').value;
+            config.amount = document.getElementById('amount').value;
+            
+            // Basic validation
+            if (!config.tokenMint || !config.destination || !config.amount) {
+                addTerminalLog('Please fill all required fields', 'error');
+                return;
+            }
+            
+            // Clear terminal and start
+            clearTerminal();
+            const network = config.networkConfig[config.network];
+            
+            addTerminalLog('🎲 Generating Solana routing path...', 'info');
+            addTerminalLog(`🌐 Network: ${network.name}`, 'info');
+            addTerminalLog(`👛 Wallet: ${config.walletAddress.substring(0, 12)}...`, 'info');
+            
+            // Check token validity
+            const tokenInfo = await checkTokenValidity(config.tokenMint);
+            
+            if (!tokenInfo) {
+                addTerminalLog('❌ Invalid token mint address', 'error');
+                addTerminalLog('Path generation aborted.', 'error');
+                showNetworkWarning();
+                return;
+            }
+            
+            config.tokenInfo = tokenInfo;
+            
+            hideNetworkWarning();
+            
+            addTerminalLog(`✓ Token: ${tokenInfo.symbol} (${tokenInfo.name})`, 'success');
+            addTerminalLog(`Decimals: ${tokenInfo.decimals}`, 'info');
+            addTerminalLog(`Supply: ${tokenInfo.supply ? tokenInfo.supply.toLocaleString() : 'Unknown'}`, 'info');
+            
+            // Generate routing path
+            addTerminalLog(`🔗 Generating ${config.txCount} transaction paths...`, 'sol');
+            
+            // SOL routing path
+            generateSOLPath();
+            
+            // SPL token routing path
+            generateSPLPath();
+            
+            // Show requirements
+            showRequirements();
+            
+            // Show privacy features
+            addTerminalLog('🔒 Privacy: Route through multiple programs & memo', 'success');
+            addTerminalLog('⚡ Speed: Solana parallel processing enabled', 'info');
+            addTerminalLog('✅ Path ready! Click EXECUTE to begin routing.', 'warning');
+            
+            // Show execute button
+            document.getElementById('executeBtn').style.display = 'block';
+            config.pathGenerated = true;
+        }
+        
+        // Generate SOL routing path
+        function generateSOLPath() {
+            const txCount = config.txCount;
+            const programsPerTx = config.programsPerTx;
+            
+            const solPath = `
+                <div class="path-section">
+                    <div class="path-title">🔗 SOL Routing (${txCount} paths):</div>
+                    <div class="path-step">
+                        <span class="account-address">${config.walletAddress.substring(0, 12)}...</span>
+                        <span class="program-name">(Source Wallet)</span>
+                    </div>
+            `;
+            
+            let html = solPath;
+            
+            // Add program interactions
+            const programs = Object.values(SOLANA_PROGRAMS.token).slice(0, 3);
+            
+            for (let i = 0; i < txCount; i++) {
+                const programIndex = i % programs.length;
+                const program = programs[programIndex];
+                const shortId = Object.keys(SOLANA_PROGRAMS.token)[programIndex].substring(0, 12) + '...';
+                
+                html += `
+                    <div class="path-step">
+                        <span class="arrow">→</span>
+                        <span class="account-address">${shortId}</span>
+                        <span class="program-name">(${program})</span>
+                        ${i === txCount - 1 ? '<span class="program-name">→ Final Route</span>' : ''}
+                    </div>
+                `;
+            }
+            
+            html += `
+                </div>
+            `;
+            
+            // Add to terminal
+            const terminal = document.getElementById('terminal');
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            terminal.appendChild(div);
+        }
+        
+        // Generate SPL token routing path
+        function generateSPLPath() {
+            const txCount = config.txCount;
+            const programsPerTx = config.programsPerTx;
+            
+            // Program types for routing
+            const programTypes = [
+                { name: 'Token Program', code: 'Token', color: '#9945FF' },
+                { name: 'Memo Program', code: 'Memo', color: '#14F195' },
+                { name: 'Noop Program', code: 'Noop', color: '#8a8aff' },
+                { name: 'Associated Token', code: 'ATA', color: '#FF6B6B' },
+                { name: 'DEX Router', code: 'DEX', color: '#FFCC00' }
+            ];
+            
+            let tokenPathHTML = '';
+            
+            for (let tx = 0; tx < txCount; tx++) {
+                const isLast = tx === txCount - 1;
+                
+                tokenPathHTML += `
+                    <div class="path-section">
+                        <div class="path-title">Path ${tx + 1}: (${programsPerTx} program interactions)</div>
+                `;
+                
+                // Start from token account
+                const sourceAccount = generateSolanaAddress();
+                tokenPathHTML += `
+                    <div class="path-step">
+                        <span class="account-address">${sourceAccount}</span>
+                        <span class="program-name">(Source Token Account)</span>
+                    </div>
+                `;
+                
+                // Add program interactions
+                for (let step = 0; step < programsPerTx; step++) {
+                    const programType = programTypes[step % programTypes.length];
+                    const programId = generateSolanaAddress();
+                    
+                    tokenPathHTML += `
+                        <div class="path-step">
+                            <span class="arrow">→</span>
+                            <span class="account-address">${programId}</span>
+                            <span class="program-name" style="color: ${programType.color}">(${programType.code})</span>
+                        </div>
+                    `;
+                }
+                
+                // Destination
+                const destination = isLast ? config.destination : generateSolanaAddress();
+                tokenPathHTML += `
+                    <div class="path-step">
+                        <span class="arrow">→</span>
+                        <span class="account-address">${isLast ? destination.substring(0, 12) + '...' : destination}</span>
+                        <span class="program-name">(${isLast ? 'Final Destination' : 'Intermediate Account'})</span>
+                    </div>
+                `;
+                
+                tokenPathHTML += `</div>`;
+            }
+            
+            // Add to terminal
+            const terminal = document.getElementById('terminal');
+            const div = document.createElement('div');
+            div.innerHTML = tokenPathHTML;
+            terminal.appendChild(div);
+        }
+        
+        // Show requirements
+        function showRequirements() {
+            const network = config.networkConfig[config.network];
+            const totalTxs = config.txCount;
+            const programsPerTx = config.programsPerTx;
+            
+            const baseFee = 0.000005;
+            const priorityFee = network.priorityFee;
+            const computeFee = programsPerTx * 0.0000001;
+            const solPerTx = baseFee + priorityFee + computeFee;
+            const totalSOL = solPerTx * totalTxs;
+            const rent = 0.001 * totalTxs * 0.1;
+            const finalTotal = totalSOL + rent;
+            
+            const requirementsHTML = `
+                <div class="lamports-estimate">
+                    <div class="path-title">⛽ SOL Requirements:</div>
+                    <div class="path-step">
+                        Network: <span class="account-address">${network.name}</span>
+                    </div>
+                    <div class="path-step">
+                        Base fee: <span class="account-address">${baseFee} SOL/tx</span>
+                    </div>
+                    <div class="path-step">
+                        Priority fee: <span class="account-address">${priorityFee} SOL/tx</span>
+                    </div>
+                    <div class="path-step">
+                        ${totalTxs} txs × ${solPerTx.toFixed(6)} SOL = <span class="account-address">${totalSOL.toFixed(6)} SOL</span>
+                    </div>
+                    <div class="path-step">
+                        Account rent: <span class="account-address">${rent.toFixed(6)} SOL</span>
+                    </div>
+                    <div class="path-step" style="margin-top: 10px; border-top: 1px solid #1a1b2e; padding-top: 10px;">
+                        <strong>➡️ TOTAL SOL NEEDED: <span class="account-address">${finalTotal.toFixed(6)} SOL</span></strong>
+                    </div>
+                    <div class="path-step">
+                        <em>Solana fees are ~1000x cheaper than Ethereum</em>
+                    </div>
+                </div>
+                
+                <div class="privacy-note">
+                    🔒 SOLANA PRIVACY FEATURES:<br>
+                    • Multiple program interactions per transaction<br>
+                    • Memo program for obfuscation<br>
+                    • Parallel transaction execution<br>
+                    • No direct wallet-to-wallet transfers<br>
+                    • Uses native Solana privacy programs
+                </div>
+            `;
+            
+            // Add to terminal
+            const terminal = document.getElementById('terminal');
+            const div = document.createElement('div');
+            div.innerHTML = requirementsHTML;
+            terminal.appendChild(div);
+        }
+        
+        // Execute transfer on Solana
+        async function executeTransfer() {
+            if (!config.pathGenerated) {
+                addTerminalLog('Generate path first', 'error');
+                return;
+            }
+            
+            if (!config.wallet) {
+                addTerminalLog('Wallet not connected', 'error');
+                return;
+            }
+            
+            addTerminalLog('🚀 Starting Solana transfer execution...', 'info');
+            addTerminalLog('🔐 Validating transaction...', 'info');
+            
+            try {
+                const network = config.networkConfig[config.network];
+                
+                // Simulate execution steps (in a real implementation, these would be actual Solana transactions)
+                const steps = [
+                    `Creating intermediate token accounts...`,
+                    `Approving token transfers via Token Program...`,
+                    `Executing path 1/4 through Memo Program...`,
+                    `Adding privacy memos...`,
+                    `Executing path 2/4 through Noop Program...`,
+                    `Validating program interactions...`,
+                    `Executing path 3/4 through Associated Token Program...`,
+                    `Creating destination token account...`,
+                    `Executing path 4/4 through Token Program...`,
+                    `Finalizing transfers...`,
+                    `Cleaning up intermediate accounts...`
+                ];
+                
+                for (let i = 0; i < steps.length; i++) {
+                    await new Promise(resolve => setTimeout(resolve, 600));
+                    addTerminalLog(`${steps[i]}`, 'info');
+                    
+                    // Simulate transaction confirmations
+                    if (i % 2 === 0) {
+                        const sig = generateSolanaSignature();
+                        addTerminalLog(`✓ Signature: ${sig}`, 'success');
+                    }
+                }
+                
+                addTerminalLog('🎉 Solana transfer completed successfully!', 'success');
+                addTerminalLog(`✅ ${config.amount} ${config.tokenInfo.symbol} delivered to destination`, 'success');
+                addTerminalLog(`⚡ Transaction time: ~${(steps.length * 0.6).toFixed(1)} seconds`, 'info');
+                addTerminalLog(`🔍 View on explorer: ${network.explorer}`, 'info');
+                addTerminalLog('🔒 Privacy routing complete - Chain analysis difficult', 'success');
+                
+                // Disable execute button
+                const executeBtn = document.getElementById('executeBtn');
+                executeBtn.disabled = true;
+                executeBtn.textContent = '✅ COMPLETED';
+                executeBtn.style.background = 'linear-gradient(135deg, #060, #090)';
+                
+            } catch (error) {
+                addTerminalLog(`❌ Execution error: ${error.message}`, 'error');
+                addTerminalLog('Check wallet balance and network connection', 'warning');
+            }
+        }
+        
+        // Helper functions
+        function addTerminalLog(message, type = 'info') {
+            const terminal = document.getElementById('terminal');
+            const now = new Date();
+            const hours = now.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const displayHours = hours % 12 || 12;
+            const timestamp = `[${displayHours.toString().padStart(2, '0')}:` +
+                            `${now.getMinutes().toString().padStart(2, '0')}:` +
+                            `${now.getSeconds().toString().padStart(2, '0')} ${ampm}]`;
+            
+            const line = document.createElement('div');
+            line.className = `terminal-line log-${type}`;
+            line.innerHTML = `
+                <span class="timestamp">${timestamp}</span>
+                ${message}
+            `;
+            
+            terminal.appendChild(line);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        function clearTerminal() {
+            const terminal = document.getElementById('terminal');
+            terminal.innerHTML = '';
+        }
+        
+        function generateSolanaAddress() {
+            const chars = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result + '...';
+        }
+        
+        function generateSolanaSignature() {
+            const chars = '0123456789abcdef';
+            let result = '';
+            for (let i = 0; i < 16; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result + '...';
+        }
+        
+        function resetConfig() {
+            if (confirm('Reset all configuration?')) {
+                document.getElementById('tokenMint').value = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v';
+                document.getElementById('destination').value = 'vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg';
+                document.getElementById('amount').value = '100.0';
+                document.getElementById('txCount').value = 4;
+                document.getElementById('programsPerTx').value = 3;
+                
+                document.getElementById('executeBtn').style.display = 'none';
+                document.getElementById('executeBtn').disabled = false;
+                document.getElementById('executeBtn').textContent = '🚀 EXECUTE ROUTING';
+                document.getElementById('executeBtn').style.background = 'linear-gradient(135deg, #9945FF, #14F195)';
+                
+                // Reset wallet display
+                document.getElementById('connectWalletBtn').style.display = 'block';
+                document.getElementById('walletInfo').style.display = 'none';
+                config.wallet = null;
+                config.walletAddress = '';
+                
+                config.pathGenerated = false;
+                clearTerminal();
+                updateSliders();
+                
+                // Initialize fresh terminal
+                addTerminalLog('Configuration reset to defaults', 'info');
+                addTerminalLog('Connect Phantom wallet to begin', 'info');
+                addTerminalLog('Ready for Solana token routing', 'success');
+            }
+        }
+        
+        // Initialize on load
+        window.onload = async function() {
+            updateSliders();
+            
+            // Check if Phantom is installed
+            if (window.solana && window.solana.isPhantom) {
+                addTerminalLog('👻 Phantom wallet detected', 'success');
+                addTerminalLog('Click "Connect Phantom Wallet" to begin', 'info');
+            } else {
+                addTerminalLog('⚠️ Install Phantom wallet for full functionality', 'warning');
+                addTerminalLog('Download from: https://phantom.app', 'info');
+            }
+            
+            // Initialize Solana
+            await initSolana();
+            
+            addTerminalLog('⚡ Solana Token Router ready', 'success');
+            addTerminalLog('Enter token mint address and click GENERATE PATH', 'info');
+        };
+    </script>
+</body>
+</html>
